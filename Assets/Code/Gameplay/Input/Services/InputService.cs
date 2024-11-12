@@ -7,13 +7,13 @@ namespace Code.Gameplay.Input.Services
     public class InputService : IInputService, IDisposable
     {
         private readonly PlayerInput _playerInput;
-        
-        private Camera _mainCamera;
         private Vector3 _screenPosition;
 
         public event Action<Vector2> MouseMoved;
         public event Action MoveActionPressed;
         public event Action MoveActionCanceled;
+        public event Action MouseLeftPressed;
+        public event Action MouseLeftCanceled;
         
         public InputService()
         {
@@ -24,6 +24,8 @@ namespace Code.Gameplay.Input.Services
             _playerInput.Hero.Move.performed += OnMoveActionPressed;
             _playerInput.Hero.Move.canceled += OnMoveActionCanceled;
             _playerInput.Hero.MouseDelta.performed += OnMouseMovePerformed;
+            _playerInput.Hero.MouseDownPress.performed += OnMouseActionPressed;
+            _playerInput.Hero.MouseDownPress.canceled += OnMouseActionCanceled;
         }
         
         public bool HasAxisInput() => GetAxisInput() != Vector2.zero;
@@ -35,6 +37,8 @@ namespace Code.Gameplay.Input.Services
             _playerInput.Hero.Move.performed -= OnMoveActionPressed;
             _playerInput.Hero.Move.canceled -= OnMoveActionCanceled;
             _playerInput.Hero.MouseDelta.performed -= OnMouseMovePerformed;
+            _playerInput.Hero.MouseDownPress.performed -= OnMouseActionPressed;
+            _playerInput.Hero.MouseDownPress.canceled -= OnMouseActionCanceled;
             
             _playerInput?.Disable();
             _playerInput?.Dispose();
@@ -46,8 +50,6 @@ namespace Code.Gameplay.Input.Services
             
             mouseDelta.x = mouseDelta.x;
             
-            Debug.Log(mouseDelta);
-            
             MouseMoved?.Invoke(mouseDelta); 
         }
 
@@ -55,7 +57,13 @@ namespace Code.Gameplay.Input.Services
             => MoveActionPressed?.Invoke();
         
         private void OnMoveActionCanceled(InputAction.CallbackContext context) 
-            => MoveActionCanceled?.Invoke();
+            => MoveActionCanceled?.Invoke();        
+        
+        private void OnMouseActionPressed(InputAction.CallbackContext context) 
+            => MouseLeftPressed?.Invoke();
+        
+        private void OnMouseActionCanceled(InputAction.CallbackContext context) 
+            => MouseLeftCanceled?.Invoke();
         
     }
 }

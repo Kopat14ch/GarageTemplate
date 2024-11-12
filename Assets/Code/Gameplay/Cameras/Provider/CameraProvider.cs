@@ -4,16 +4,18 @@ namespace Code.Gameplay.Cameras.Provider
 {
     public class CameraProvider : ICameraProvider
     {
+        private Camera _mainCamera;
+        
         public Camera MainCamera
         {
             get
             {
-                if (MainCamera == null)
-                    MainCamera = Camera.main;
+                if (_mainCamera == null)
+                    _mainCamera = Camera.main;
                 
                 return Camera.main;
             }
-            private set => MainCamera = value;
+            private set => _mainCamera = value;
         }
 
         public float WorldScreenHeight { get; private set; }
@@ -21,7 +23,7 @@ namespace Code.Gameplay.Cameras.Provider
 
         public void SetMainCamera(Camera camera)
         {
-            MainCamera = camera;
+            _mainCamera = camera;
 
             RefreshBoundaries();
         }

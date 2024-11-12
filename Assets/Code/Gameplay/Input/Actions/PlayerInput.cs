@@ -44,6 +44,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MouseDownPress"",
+                    ""type"": ""Button"",
+                    ""id"": ""e51da85d-6ad1-4933-bc1f-22bc4671ae1d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -112,6 +121,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""MouseDelta"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""631c5781-f10c-4b9e-b3cb-fcff20dda449"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""MouseDownPress"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -139,6 +159,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         m_Hero = asset.FindActionMap("Hero", throwIfNotFound: true);
         m_Hero_Move = m_Hero.FindAction("Move", throwIfNotFound: true);
         m_Hero_MouseDelta = m_Hero.FindAction("MouseDelta", throwIfNotFound: true);
+        m_Hero_MouseDownPress = m_Hero.FindAction("MouseDownPress", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -202,12 +223,14 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private List<IHeroActions> m_HeroActionsCallbackInterfaces = new List<IHeroActions>();
     private readonly InputAction m_Hero_Move;
     private readonly InputAction m_Hero_MouseDelta;
+    private readonly InputAction m_Hero_MouseDownPress;
     public struct HeroActions
     {
         private @PlayerInput m_Wrapper;
         public HeroActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Hero_Move;
         public InputAction @MouseDelta => m_Wrapper.m_Hero_MouseDelta;
+        public InputAction @MouseDownPress => m_Wrapper.m_Hero_MouseDownPress;
         public InputActionMap Get() { return m_Wrapper.m_Hero; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -223,6 +246,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @MouseDelta.started += instance.OnMouseDelta;
             @MouseDelta.performed += instance.OnMouseDelta;
             @MouseDelta.canceled += instance.OnMouseDelta;
+            @MouseDownPress.started += instance.OnMouseDownPress;
+            @MouseDownPress.performed += instance.OnMouseDownPress;
+            @MouseDownPress.canceled += instance.OnMouseDownPress;
         }
 
         private void UnregisterCallbacks(IHeroActions instance)
@@ -233,6 +259,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @MouseDelta.started -= instance.OnMouseDelta;
             @MouseDelta.performed -= instance.OnMouseDelta;
             @MouseDelta.canceled -= instance.OnMouseDelta;
+            @MouseDownPress.started -= instance.OnMouseDownPress;
+            @MouseDownPress.performed -= instance.OnMouseDownPress;
+            @MouseDownPress.canceled -= instance.OnMouseDownPress;
         }
 
         public void RemoveCallbacks(IHeroActions instance)
@@ -263,5 +292,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnMouseDelta(InputAction.CallbackContext context);
+        void OnMouseDownPress(InputAction.CallbackContext context);
     }
 }

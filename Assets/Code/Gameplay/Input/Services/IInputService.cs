@@ -8,6 +8,8 @@ namespace Code.Gameplay.Input.Services
         event Action<Vector2> MouseMoved;
         event Action MoveActionPressed;
         event Action MoveActionCanceled;
+        event Action MouseLeftPressed;
+        event Action MouseLeftCanceled;
         
         bool HasAxisInput();
         Vector2 GetAxisInput();

@@ -1,7 +1,9 @@
 ﻿using Code.Gameplay.Cameras.Provider;
+using Code.Gameplay.Features.DragAndDrop.Services;
 using Code.Gameplay.Features.Rotating.Services;
 using Code.Gameplay.Input.Services;
 using Code.Infrastructure.Loading;
+using UnityEngine;
 using Zenject;
 
 namespace Code.Infrastructure.Installers
@@ -15,6 +17,7 @@ namespace Code.Infrastructure.Installers
             BindCommonServices();
             BindRotating();
             BindCamera();
+            BindDragAndDrop();
         }
         
         private void BindInputService()
@@ -40,6 +43,11 @@ namespace Code.Infrastructure.Installers
         private void BindCamera()
         {
             Container.Bind<ICameraProvider>().To<CameraProvider>().AsSingle();
+        }
+        
+        private void BindDragAndDrop()
+        {
+            Container.BindInterfacesTo<DragService>().AsSingle();
         }
 
         public void Initialize()
