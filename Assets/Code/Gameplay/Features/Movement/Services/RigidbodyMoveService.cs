@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using Code.Gameplay.Input.Services;
 using Cysharp.Threading.Tasks;
@@ -9,8 +8,8 @@ namespace Code.Gameplay.Features.Movement.Services
     public class RigidbodyMoveService : IRigidbodyMoveService
     {
         private readonly Rigidbody _rigidbody;
+        private readonly CancellationTokenSource _cancellationTokenSource;
         
-        private CancellationTokenSource _cancellationTokenSource;
         private CancellationToken _token;
         
         private float _speed;
@@ -27,15 +26,17 @@ namespace Code.Gameplay.Features.Movement.Services
         {
             if (_isMoving)
                 return;
-            
+
             _speed = speed;
             _isMoving = true;
-            
-            while (_isMoving && _cancellationTokenSource.IsCancellationRequested == false)
+
+            while (_isMoving && !_cancellationTokenSource.IsCancellationRequested)
             {
                 Vector2 direction = inputService.GetAxisInput();
-            
-                _rigidbody.velocity = new Vector3(direction.x, _rigidbody.velocity.y, direction.y) * _speed;
+                
+                Vector3 moveDirection = _rigidbody.transform.forward * direction.y + _rigidbody.transform.right * direction.x;
+                
+                _rigidbody.velocity = new Vector3(moveDirection.x, _rigidbody.velocity.y, moveDirection.z) * _speed;
                 
                 await UniTask.Yield();
             }
@@ -43,7 +44,7 @@ namespace Code.Gameplay.Features.Movement.Services
 
         public void Stop()
         {
-            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.velocity = new Vector3(0, _rigidbody.velocity.y, 0);
             _isMoving = false;
         }
 

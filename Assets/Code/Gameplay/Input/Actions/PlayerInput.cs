@@ -35,6 +35,15 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MouseDelta"",
+                    ""type"": ""Value"",
+                    ""id"": ""2a81e383-2d58-4988-8afe-e6211abac2f2"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -92,6 +101,17 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""70d46614-d6bb-4ea4-9e26-23f3303f02c0"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MouseDelta"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -118,6 +138,7 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
         // Hero
         m_Hero = asset.FindActionMap("Hero", throwIfNotFound: true);
         m_Hero_Move = m_Hero.FindAction("Move", throwIfNotFound: true);
+        m_Hero_MouseDelta = m_Hero.FindAction("MouseDelta", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -180,11 +201,13 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Hero;
     private List<IHeroActions> m_HeroActionsCallbackInterfaces = new List<IHeroActions>();
     private readonly InputAction m_Hero_Move;
+    private readonly InputAction m_Hero_MouseDelta;
     public struct HeroActions
     {
         private @PlayerInput m_Wrapper;
         public HeroActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Hero_Move;
+        public InputAction @MouseDelta => m_Wrapper.m_Hero_MouseDelta;
         public InputActionMap Get() { return m_Wrapper.m_Hero; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -197,6 +220,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @MouseDelta.started += instance.OnMouseDelta;
+            @MouseDelta.performed += instance.OnMouseDelta;
+            @MouseDelta.canceled += instance.OnMouseDelta;
         }
 
         private void UnregisterCallbacks(IHeroActions instance)
@@ -204,6 +230,9 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @MouseDelta.started -= instance.OnMouseDelta;
+            @MouseDelta.performed -= instance.OnMouseDelta;
+            @MouseDelta.canceled -= instance.OnMouseDelta;
         }
 
         public void RemoveCallbacks(IHeroActions instance)
@@ -233,5 +262,6 @@ public partial class @PlayerInput: IInputActionCollection2, IDisposable
     public interface IHeroActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnMouseDelta(InputAction.CallbackContext context);
     }
 }
